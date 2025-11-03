@@ -54,6 +54,12 @@
             <artifactId>ooify-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>me.ooify</groupId>
+            <artifactId>ooify-pdi</artifactId>
+            <version>3.8.9</version>
+        </dependency>
+
     </dependencies>
 
     <build>

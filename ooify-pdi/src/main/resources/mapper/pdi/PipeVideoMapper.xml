@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.ooify.pdi.mapper.PipeVideoMapper">
+    
+    <resultMap type="PipeVideo" id="PipeVideoResult">
+        <result property="id"    column="id"    />
+        <result property="videoName"    column="video_name"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="thumbnailUrl"    column="thumbnail_url"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="mimeType"    column="mime_type"    />
+        <result property="duration"    column="duration"    />
+        <result property="resolution"    column="resolution"    />
+        <result property="pipeInfo"    column="pipe_info"    />
+        <result property="uploadStatus"    column="upload_status"    />
+        <result property="uploadError"    column="upload_error"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPipeVideoVo">
+        select id, video_name, video_url, thumbnail_url, file_size, mime_type, duration, resolution, pipe_info, upload_status, upload_error, create_by, is_deleted, remark, create_time, update_time from pipe_video
+    </sql>
+
+    <select id="selectPipeVideoList" parameterType="PipeVideo" resultMap="PipeVideoResult">
+        <include refid="selectPipeVideoVo"/>
+        <where>  
+            <if test="videoName != null  and videoName != ''"> and video_name like concat('%', #{videoName}, '%')</if>
+            <if test="mimeType != null  and mimeType != ''"> and mime_type = #{mimeType}</if>
+            <if test="uploadStatus != null "> and upload_status = #{uploadStatus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by like concat('%', #{createBy}, '%')</if>
+            <if test="isDeleted != null "> and is_deleted = #{isDeleted}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectPipeVideoById" parameterType="Long" resultMap="PipeVideoResult">
+        <include refid="selectPipeVideoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPipeVideo" parameterType="PipeVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into pipe_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoName != null and videoName != ''">video_name,</if>
+            <if test="videoUrl != null and videoUrl != ''">video_url,</if>
+            <if test="thumbnailUrl != null and thumbnailUrl != ''">thumbnail_url,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="mimeType != null">mime_type,</if>
+            <if test="duration != null">duration,</if>
+            <if test="resolution != null">resolution,</if>
+            <if test="pipeInfo != null and pipeInfo != ''">pipe_info,</if>
+            <if test="uploadStatus != null">upload_status,</if>
+            <if test="uploadError != null">upload_error,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoName != null and videoName != ''">#{videoName},</if>
+            <if test="videoUrl != null and videoUrl != ''">#{videoUrl},</if>
+            <if test="thumbnailUrl != null and thumbnailUrl != ''">#{thumbnailUrl},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="mimeType != null">#{mimeType},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="resolution != null">#{resolution},</if>
+            <if test="pipeInfo != null and pipeInfo != ''">#{pipeInfo},</if>
+            <if test="uploadStatus != null">#{uploadStatus},</if>
+            <if test="uploadError != null">#{uploadError},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePipeVideo" parameterType="PipeVideo">
+        update pipe_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoName != null and videoName != ''">video_name = #{videoName},</if>
+            <if test="videoUrl != null and videoUrl != ''">video_url = #{videoUrl},</if>
+            <if test="thumbnailUrl != null and thumbnailUrl != ''">thumbnail_url = #{thumbnailUrl},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="mimeType != null">mime_type = #{mimeType},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="resolution != null">resolution = #{resolution},</if>
+            <if test="pipeInfo != null and pipeInfo != ''">pipe_info = #{pipeInfo},</if>
+            <if test="uploadStatus != null">upload_status = #{uploadStatus},</if>
+            <if test="uploadError != null">upload_error = #{uploadError},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePipeVideoById" parameterType="Long">
+        delete from pipe_video where id = #{id}
+    </delete>
+
+    <delete id="deletePipeVideoByIds" parameterType="String">
+        delete from pipe_video where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

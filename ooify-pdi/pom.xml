@@ -17,6 +17,10 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>me.ooify</groupId>
+            <artifactId>ooify-common</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>ooify-pdi</finalName>
