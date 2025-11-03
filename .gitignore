@@ -1,6 +1,5 @@
 ######################################################################
 # Build Tools
-
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -45,3 +44,6 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+application.yml
+application-druid.yml
