@@ -1,4 +1,4 @@
-package me.ooify.pdi.controller;
+package me.ooify.web.controller.pdi.admin;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
