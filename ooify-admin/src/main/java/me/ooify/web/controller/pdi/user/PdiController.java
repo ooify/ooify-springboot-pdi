@@ -58,6 +58,17 @@ public class PdiController extends BaseController {
         }
         return success(pipVideoVO);
     }
+
+
+    /**
+     * 上传管道视频
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping
+    public AjaxResult upVideo(@RequestBody PipeVideo pipeVideo)
+    {
+        return toAjax(pipeVideoService.insertPipeVideo(pipeVideo));
+    }
 //
 //    /**
 //     * 新增管道视频
