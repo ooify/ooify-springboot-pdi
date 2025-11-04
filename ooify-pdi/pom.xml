@@ -21,6 +21,11 @@
             <groupId>me.ooify</groupId>
             <artifactId>ooify-common</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>ooify-pdi</finalName>

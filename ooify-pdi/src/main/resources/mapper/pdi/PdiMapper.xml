@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.ooify.pdi.mapper.PdiMapper">
+
+    <resultMap type="PipVideoVO" id="PipeVideoVOResult">
+        <result property="id" column="id"/>
+        <result property="videoName" column="video_name"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="mimeType" column="mime_type"/>
+        <result property="duration" column="duration"/>
+        <result property="resolution" column="resolution"/>
+        <result property="pipeInfo" column="pipe_info"/>
+        <result property="uploadStatus" column="upload_status"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectPipeVideoVo">
+        select id,
+               video_name,
+               video_url,
+               thumbnail_url,
+               file_size,
+               mime_type,
+               duration,
+               resolution,
+               pipe_info,
+               upload_status,
+               create_time
+        from pipe_video
+    </sql>
+
+    <select id="selectPipeVideoVOListByUser" resultMap="PipeVideoVOResult">
+        <include refid="selectPipeVideoVo"/>
+        <where>
+            <if test="pipVideoVO.videoName != null and pipVideoVO.videoName != ''">
+                and video_name like concat('%', #{pipVideoVO.videoName}, '%')
+            </if>
+            <if test="pipVideoVO.mimeType != null and pipVideoVO.mimeType != ''">
+                and mime_type = #{pipVideoVO.mimeType}
+            </if>
+            <if test="pipVideoVO.uploadStatus != null">
+                and upload_status = #{pipVideoVO.uploadStatus}
+            </if>
+            <if test="pipVideoVO.params.beginCreateTime != null and pipVideoVO.params.beginCreateTime != ''
+            and pipVideoVO.params.endCreateTime != null and pipVideoVO.params.endCreateTime != ''">
+                and create_time between #{pipVideoVO.params.beginCreateTime} and #{pipVideoVO.params.endCreateTime}
+            </if>
+            and create_by = #{username}
+            and is_deleted = 0
+        </where>
+        order by create_time desc
+    </select>
+    <select id="selectPipeVideoVOById" parameterType="Long" resultType="me.ooify.pdi.domain.vo.PipVideoVO">
+        <include refid="selectPipeVideoVo"/>
+        where id = #{id}
+    </select>
+</mapper>
