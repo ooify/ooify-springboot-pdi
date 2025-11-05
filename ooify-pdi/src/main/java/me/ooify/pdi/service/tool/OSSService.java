@@ -7,10 +7,13 @@ import com.aliyun.sts20150401.models.AssumeRoleResponse;
 import com.aliyun.sts20150401.models.AssumeRoleResponseBody;
 import com.aliyun.tea.TeaException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.ooify.common.core.domain.AjaxResult;
 import me.ooify.pdi.utils.bean.AliOSSProperties;
+import me.ooify.pdi.utils.file.AliOssUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -22,6 +25,9 @@ import java.util.*;
 
 @Service
 public class OSSService {
+
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     @Autowired
     private AliOSSProperties aliOSSProperties;
@@ -151,6 +157,16 @@ public class OSSService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to calculate HMAC-SHA256", e);
         }
+    }
+
+
+    public Map<String, String>  uploadOSS(MultipartFile file, String fileName, String directory) throws Exception {
+        String url = aliOssUtil.upload(file, fileName, directory);
+        Map<String, String> fileInfo = new HashMap<>();
+        fileInfo.put("url", url);
+        fileInfo.put("fileName", fileName);
+        System.out.println(fileInfo);
+        return fileInfo;
     }
 
 }

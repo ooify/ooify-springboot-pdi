@@ -33,7 +33,7 @@ public class OCRService {
     @Autowired
     private ChatClient chatClient;
 
-    private String OCRChat(MultipartFile image) {
+    public String ocrChat(MultipartFile image) {
         return chatClient.prompt()
                 .user(p -> p.text(DEFAULT_PROMPT).media(MimeTypeUtils.IMAGE_PNG, image.getResource()))
                 .call()

@@ -1,16 +1,13 @@
 package me.ooify.web.controller.pdi.user;
 
-import me.ooify.common.annotation.Log;
 import me.ooify.common.core.controller.BaseController;
 import me.ooify.common.core.domain.AjaxResult;
 import me.ooify.common.core.page.TableDataInfo;
-import me.ooify.common.enums.BusinessType;
 import me.ooify.common.utils.SecurityUtils;
 import me.ooify.pdi.domain.PipeVideo;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.service.IPdiService;
 import me.ooify.pdi.service.IPipeVideoService;
-import me.ooify.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -65,8 +62,9 @@ public class PdiController extends BaseController {
      */
     @PreAuthorize("@ss.hasRole('user')")
     @PostMapping
-    public AjaxResult upVideo(@RequestBody PipeVideo pipeVideo)
+    public AjaxResult uploadVideo(@RequestBody PipeVideo pipeVideo)
     {
+
         return toAjax(pipeVideoService.insertPipeVideo(pipeVideo));
     }
 //
