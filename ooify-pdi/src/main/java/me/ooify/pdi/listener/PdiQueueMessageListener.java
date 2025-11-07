@@ -1,28 +1,54 @@
 package me.ooify.pdi.listener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.alibaba.fastjson2.JSONObject;
+
+import java.util.HashMap;
+
+import me.ooify.pdi.config.RabbitMQConfig;
+import me.ooify.pdi.domain.PipeVideo;
+import me.ooify.pdi.service.IPipeVideoService;
+import me.ooify.pdi.service.tool.OCRService;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class PdiQueueMessageListener {
+    @Autowired
+    private OCRService ocrService;
+    @Autowired
+    private IPipeVideoService pipeVideoService;
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
+    // OCR 消费者
+    @Component
+    @RabbitListener(queues = RabbitMQConfig.OCR_QUEUE)
+    public class OCRConsumer {
+        @RabbitHandler
+        public void process(String message) throws Exception {
+            JSONObject json = JSONObject.parseObject(message);
+            Long videoId = json.getLong("videoId");
+            String url = json.getString("url");
 
-    static final String QUEUE_TASK = "doc_task";
-
-    @RabbitListener(queues = QUEUE_TASK)
-    public void onRegistrationMessageFromMailQueue(String message) {
-        logger.info("queue {} received registration message: {}", QUEUE_TASK, message);
-//        logger.info("queue {} received task: {}", QUEUE_TASK, message);
-//        try {
-//            // 模拟任务执行耗时20秒
-//            Thread.sleep(20000);
-//            logger.info("queue {} finished processing task: {}", QUEUE_TASK, message);
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//            logger.error("Task interrupted while processing message: {}", message, e);
-//        }
+            String s = ocrService.PipInfoOcr(url);
+            JSONObject jsonObject = JSONObject.parseObject(s);
+            PipeVideo pipeVideo = new PipeVideo();
+            pipeVideo.setId((videoId));
+            pipeVideo.setPipeInfo(String.valueOf(jsonObject));
+            pipeVideoService.updatePipeVideo(pipeVideo);
+        }
     }
+
+    // 文档生成消费者
+    @Component
+    @RabbitListener(queues = RabbitMQConfig.DOC_QUEUE)
+    public class DocConsumer {
+        @RabbitHandler
+        public void process(String message) {
+            System.out.println("生成文档任务: " + message);
+        }
+    }
+
+
 }

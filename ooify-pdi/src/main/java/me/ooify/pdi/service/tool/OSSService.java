@@ -85,7 +85,7 @@ public class OSSService {
     }
 
 
-    public Map<String, String> getPostSignatureForOssUpload() throws Exception {
+    public Map<String, String> getPostSignatureForOssUpload(Long fileId) throws Exception {
         AssumeRoleResponseBody.AssumeRoleResponseBodyCredentials stsData = getCredential();
 
         String accessKeyId = stsData.accessKeyId;
@@ -110,6 +110,7 @@ public class OSSService {
         conditions.add(Map.of("x-oss-credential", x_oss_credential));
         conditions.add(Map.of("x-oss-date", x_oss_date));
         conditions.add(Arrays.asList("content-length-range", 1, 10240000));
+        conditions.add(Arrays.asList("in", "$content-type", Arrays.asList("video/mp4","video/ogg","video/flv","video/avi","video/wmv","video/rmvb","video/mov")));
         conditions.add(Arrays.asList("eq", "$success_action_status", "200"));
         conditions.add(Arrays.asList("starts-with", "$key", upload_dir));
 
@@ -128,7 +129,9 @@ public class OSSService {
         // 步骤5：设置回调。
         JSONObject jasonCallback = new JSONObject();
         jasonCallback.put("callbackUrl", aliOSSProperties.getCallback());
-        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}");
+//        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}");
+//        fileId
+        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&fileId="+fileId);
         jasonCallback.put("callbackBodyType", "application/x-www-form-urlencoded");
         String base64CallbackBody = BinaryUtil.toBase64String(jasonCallback.toString().getBytes());
 
@@ -160,13 +163,10 @@ public class OSSService {
     }
 
 
-    public Map<String, String>  uploadOSS(MultipartFile file, String fileName, String directory) throws Exception {
+    public String  uploadOSS(MultipartFile file, String fileName, String directory) throws Exception {
         String url = aliOssUtil.upload(file, fileName, directory);
-        Map<String, String> fileInfo = new HashMap<>();
-        fileInfo.put("url", url);
-        fileInfo.put("fileName", fileName);
-        System.out.println(fileInfo);
-        return fileInfo;
+        System.out.println(url);
+        return url;
     }
 
 }

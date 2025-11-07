@@ -3,8 +3,10 @@ package me.ooify.pdi.service;
 import me.ooify.pdi.domain.PipeVideo;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * PdiService接口
@@ -29,4 +31,6 @@ public interface IPdiService {
      * @return 管道视频VO
      */
     public PipVideoVO selectPipeVideoVOById(Long id);
+
+    public Map<String, String>  handleUserUpload(PipVideoVO pipVideoVO, MultipartFile image) throws Exception;
 }
