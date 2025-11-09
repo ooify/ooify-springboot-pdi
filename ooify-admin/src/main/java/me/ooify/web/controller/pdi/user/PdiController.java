@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户上传视频Controller
@@ -80,9 +81,9 @@ public class PdiController extends BaseController {
         if (image == null || image.isEmpty()) {
             return AjaxResult.error("上传的图片不能为空");
         }
-        pdiService.handleUserUpload(pipVideoVO, image);
+        Map<String, String> signature = pdiService.handleUserUpload(pipVideoVO, image);
 
-        return toAjax(123);
+        return success(signature);
     }
 
 
@@ -91,18 +92,18 @@ public class PdiController extends BaseController {
      */
     @PreAuthorize("@ss.hasRole('user')")
     @PutMapping
-    public AjaxResult edit(@RequestBody PipeVideo pipeVideo) {
+    public AjaxResult edit(@RequestBody PipVideoVO pipVideoVO) {
+        PipeVideo pipeVideo = new PipeVideo();
+        BeanUtils.copyProperties(pipVideoVO, pipeVideo);
         return toAjax(pipeVideoService.updatePipeVideo(pipeVideo));
     }
-//
-//    /**
-//     * 删除管道视频
-//     */
-//    @PreAuthorize("@ss.hasRole('user')")
-//    @Log(title = "管道视频", businessType = BusinessType.DELETE)
-//	@DeleteMapping("/{ids}")
-//    public AjaxResult remove(@PathVariable Long[] ids)
-//    {
-//        return toAjax(pipeVideoService.deletePipeVideoByIds(ids));
-//    }
+
+    /**
+     * 删除管道视频
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(pipeVideoService.deletePipeVideoByIds(ids));
+    }
 }

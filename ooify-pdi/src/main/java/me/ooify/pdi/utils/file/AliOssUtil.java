@@ -35,14 +35,8 @@ public class AliOssUtil {
         // 获取上传的文件的输入流
         InputStream inputStream = file.getInputStream();
 
-        // 避免文件覆盖，使用UUID和传入的文件名
         String originalFilename = file.getOriginalFilename();
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-
-        // 如果没有传入filename，则使用UUID生成
-        if (StringUtils.isEmpty(filename)) {
-            filename = UUID.randomUUID().toString();
-        }
 
         // 组装最终的文件名，包括目录
         String finalFileName = directory + "/" + filename + fileExtension;
@@ -53,6 +47,35 @@ public class AliOssUtil {
 
         // 文件访问路径
         String url = "https://" + bucketName + "." + endpoint + "/" + finalFileName;
+
+        // 关闭ossClient
+        ossClient.shutdown();
+
+        // 把上传到oss的路径返回
+        return url;
+    }
+
+    public String upload(MultipartFile file, String directory) throws IOException {
+        // 获取阿里云OSS参数
+        String endpoint = aliOSSProperties.getEndpoint();
+        String accessKeyId = aliOSSProperties.getAccessKeyId();
+        String accessKeySecret = aliOSSProperties.getAccessKeySecret();
+        String bucketName = aliOSSProperties.getBucketName();
+
+        // 获取上传的文件的输入流
+        InputStream inputStream = file.getInputStream();
+
+        String originalFilename = file.getOriginalFilename();
+//        获取文件名去除扩展
+        String filenameWithoutExt = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        String finalFilename = directory+"/"+filenameWithoutExt + "_" + System.currentTimeMillis()+ fileExtension;
+        // 上传文件到 OSS
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        ossClient.putObject(bucketName, finalFilename, inputStream);
+
+        // 文件访问路径
+        String url = "https://" + bucketName + "." + endpoint + "/" + finalFilename;
 
         // 关闭ossClient
         ossClient.shutdown();

@@ -7,7 +7,6 @@ import com.aliyun.sts20150401.models.AssumeRoleResponse;
 import com.aliyun.sts20150401.models.AssumeRoleResponseBody;
 import com.aliyun.tea.TeaException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.ooify.common.core.domain.AjaxResult;
 import me.ooify.pdi.utils.bean.AliOSSProperties;
 import me.ooify.pdi.utils.file.AliOssUtil;
 import org.apache.commons.codec.binary.Base64;
@@ -110,7 +109,7 @@ public class OSSService {
         conditions.add(Map.of("x-oss-credential", x_oss_credential));
         conditions.add(Map.of("x-oss-date", x_oss_date));
         conditions.add(Arrays.asList("content-length-range", 1, 10240000));
-        conditions.add(Arrays.asList("in", "$content-type", Arrays.asList("video/mp4","video/ogg","video/flv","video/avi","video/wmv","video/rmvb","video/mov")));
+        conditions.add(Arrays.asList("in", "$content-type", Arrays.asList("video/mp4", "video/ogg", "video/flv", "video/avi", "video/wmv", "video/rmvb", "video/mov")));
         conditions.add(Arrays.asList("eq", "$success_action_status", "200"));
         conditions.add(Arrays.asList("starts-with", "$key", upload_dir));
 
@@ -131,7 +130,7 @@ public class OSSService {
         jasonCallback.put("callbackUrl", aliOSSProperties.getCallback());
 //        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}");
 //        fileId
-        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&fileId="+fileId);
+        jasonCallback.put("callbackBody", "url=" + aliOSSProperties.getHost() + "/" + "${object}&fileId=" + fileId);
         jasonCallback.put("callbackBodyType", "application/x-www-form-urlencoded");
         String base64CallbackBody = BinaryUtil.toBase64String(jasonCallback.toString().getBytes());
 
@@ -145,6 +144,7 @@ public class OSSService {
         response.put("dir", upload_dir);
         response.put("host", aliOSSProperties.getHost());
         response.put("callback", base64CallbackBody);
+        response.put("fileId", String.valueOf(fileId));
         return response;
     }
 
@@ -163,10 +163,12 @@ public class OSSService {
     }
 
 
-    public String  uploadOSS(MultipartFile file, String fileName, String directory) throws Exception {
-        String url = aliOssUtil.upload(file, fileName, directory);
-        System.out.println(url);
-        return url;
+    public String uploadOSS(MultipartFile file, String fileName, String directory) throws Exception {
+        return aliOssUtil.upload(file, fileName, directory);
+    }
+
+    public String uploadOSS(MultipartFile file, String directory) throws Exception {
+        return aliOssUtil.upload(file, directory);
     }
 
 }

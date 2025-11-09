@@ -44,22 +44,19 @@ public class PdiServiceImpl implements IPdiService {
 
     @Override
     public Map<String, String> handleUserUpload(PipVideoVO pipVideoVO, MultipartFile image) throws Exception {
-
-        String thumbnail_url = ossService.uploadOSS(image, image.getName(), "thumbnail");
-
+        String thumbnail_url = ossService.uploadOSS(image, "thumbnail/" + SecurityUtils.getUsername());
         PipeVideo pipeVideo = new PipeVideo();
+        BeanUtils.copyProperties(pipVideoVO, pipeVideo);
         pipeVideo.setCreateBy(SecurityUtils.getUsername());
         pipeVideo.setThumbnailUrl(thumbnail_url);
-        BeanUtils.copyProperties(pipVideoVO, pipeVideo);
-//        上传状态设置为上传中
+//        上传中
         pipeVideo.setUploadStatus(0L);
 //        创建视频记录
         pipeVideoService.insertPipeVideo(pipeVideo);
 //        发送 OCR 消息
         messagingService.sendOCRMessage(pipeVideo.getId(), thumbnail_url);
-
-
-        return Map.of();
+//        返回签名信息
+        return ossService.getPostSignatureForOssUpload(pipeVideo.getId());
     }
 
 }
