@@ -32,5 +32,11 @@ public interface IPdiService {
      */
     public PipVideoVO selectPipeVideoVOById(Long id);
 
-    public Map<String, String>  handleUserUpload(PipVideoVO pipVideoVO, MultipartFile image) throws Exception;
+    public Map<String, String> handleUserUpload(PipVideoVO pipVideoVO) throws Exception;
+
+    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl);
+
+    public int deletePipeVideoByIds(Long[] ids);
+
+    public int deletePipeVideoById(Long id);
 }

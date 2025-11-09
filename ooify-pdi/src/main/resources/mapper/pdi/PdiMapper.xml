@@ -58,4 +58,19 @@
         <include refid="selectPipeVideoVo"/>
         where id = #{id}
     </select>
+
+    <update id="deletePipeVideoById" parameterType="Long">
+        update pipe_video
+        set is_deleted = 1
+        where id = #{id}
+    </update>
+
+    <update id="deletePipeVideoByIds" parameterType="String">
+        update pipe_video
+        set is_deleted = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

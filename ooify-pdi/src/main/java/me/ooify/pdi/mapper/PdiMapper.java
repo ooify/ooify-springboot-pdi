@@ -29,4 +29,20 @@ public interface PdiMapper {
      * @return 管道视频VO
      */
     public PipVideoVO selectPipeVideoVOById(Long id);
+
+    /**
+     * 删除管道视频,源文件不删除
+     *
+     * @param id 管道视频主键
+     * @return 结果
+     */
+    public int deletePipeVideoById(Long id);
+
+    /**
+     * 批量删除管道视频,源文件不删除
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deletePipeVideoByIds(Long[] ids);
 }

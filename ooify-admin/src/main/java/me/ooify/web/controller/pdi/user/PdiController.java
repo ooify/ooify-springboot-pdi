@@ -73,19 +73,22 @@ public class PdiController extends BaseController {
      * 新增管道视频
      */
     @PreAuthorize("@ss.hasRole('user')")
-    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public AjaxResult add(@RequestParam("pipeVideo") String pipeVideoStr,
-                          @RequestParam("image") MultipartFile image
-    ) throws Exception {
-        PipVideoVO pipVideoVO = JSONObject.parseObject(pipeVideoStr, PipVideoVO.class);
-        if (image == null || image.isEmpty()) {
-            return AjaxResult.error("上传的图片不能为空");
-        }
-        Map<String, String> signature = pdiService.handleUserUpload(pipVideoVO, image);
-
+    @PostMapping()
+    public AjaxResult add(@RequestBody PipVideoVO pipVideoVO) throws Exception {
+        Map<String, String> signature = pdiService.handleUserUpload(pipVideoVO);
         return success(signature);
     }
 
+    /**
+     * 上传管道视频回调
+     */
+//    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping("/upload_callback")
+    public AjaxResult uploadCallback(@RequestParam("fileId") Long videoId,
+                                     @RequestParam("url") String videoUrl) {
+        pdiService.handleUploadCallback(videoId, videoUrl);
+        return success();
+    }
 
     /**
      * 修改管道视频
@@ -99,11 +102,42 @@ public class PdiController extends BaseController {
     }
 
     /**
+     * 管道视频上传失败
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping("/upload_failed")
+    public AjaxResult uploadFailed(@RequestParam("fileId") Long videoId,
+                                   @RequestParam("upload_error") String upload_error) {
+        PipeVideo pipeVideo = new PipeVideo();
+        pipeVideo.setId(videoId);
+        pipeVideo.setUploadError(upload_error);
+//        上传失败
+        pipeVideo.setUploadStatus(2L);
+        pipeVideoService.updatePipeVideo(pipeVideo);
+        return success();
+    }
+    /**
+     * 确认管道信息
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping("/confirm_pipe_info")
+    public AjaxResult confirmPipeInfo(@RequestParam("videoId") Long videoId,
+                                      @RequestParam("pipInfo") String pipInfo) {
+        PipeVideo pipeVideo = new PipeVideo();
+        pipeVideo.setId(videoId);
+        pipeVideo.setPipeInfo(pipInfo);
+//        确认完成
+        pipeVideo.setUploadStatus(1L);
+        pipeVideoService.updatePipeVideo(pipeVideo);
+        return success();
+    }
+
+    /**
      * 删除管道视频
      */
     @PreAuthorize("@ss.hasRole('user')")
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(pipeVideoService.deletePipeVideoByIds(ids));
+        return toAjax(pdiService.deletePipeVideoByIds(ids));
     }
 }
