@@ -1,10 +1,15 @@
 package me.ooify.web.controller.pdi.user;
 
 import com.alibaba.fastjson2.JSONObject;
+import jakarta.servlet.http.HttpServletRequest;
+import me.ooify.common.annotation.Anonymous;
 import me.ooify.common.core.controller.BaseController;
 import me.ooify.common.core.domain.AjaxResult;
+import me.ooify.common.core.domain.model.LoginUser;
 import me.ooify.common.core.page.TableDataInfo;
 import me.ooify.common.utils.SecurityUtils;
+import me.ooify.common.utils.StringUtils;
+import me.ooify.framework.web.service.TokenService;
 import me.ooify.pdi.domain.PipeVideo;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.service.IPdiService;
@@ -19,8 +24,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 用户上传视频Controller
@@ -75,6 +84,7 @@ public class PdiController extends BaseController {
     @PreAuthorize("@ss.hasRole('user')")
     @PostMapping()
     public AjaxResult add(@RequestBody PipVideoVO pipVideoVO) throws Exception {
+        System.out.println(pipVideoVO);
         Map<String, String> signature = pdiService.handleUserUpload(pipVideoVO);
         return success(signature);
     }
@@ -83,12 +93,15 @@ public class PdiController extends BaseController {
      * 上传管道视频回调
      */
 //    @PreAuthorize("@ss.hasRole('user')")
+    @Anonymous
     @PostMapping("/upload_callback")
     public AjaxResult uploadCallback(@RequestParam("fileId") Long videoId,
                                      @RequestParam("url") String videoUrl) {
+//        System.out.println("上传回调: videoId=" + videoId + ", videoUrl=" + videoUrl);
         pdiService.handleUploadCallback(videoId, videoUrl);
         return success();
     }
+
 
     /**
      * 修改管道视频
@@ -116,6 +129,7 @@ public class PdiController extends BaseController {
         pipeVideoService.updatePipeVideo(pipeVideo);
         return success();
     }
+
     /**
      * 确认管道信息
      */

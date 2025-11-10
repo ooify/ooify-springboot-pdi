@@ -30,16 +30,36 @@ public class PdiServiceImpl implements IPdiService {
     @Autowired
     private OSSService ossService;
 
+    /**
+     * 查询管道视频列表
+     *
+     * @param pipVideoVO 管道视频信息
+     * @param username   用户名
+     * @return 管道视频集合
+     */
     @Override
     public List<PipVideoVO> selectPipeVideoVOListByUser(PipVideoVO pipVideoVO, String username) {
 
         return pdiMapper.selectPipeVideoVOListByUser(pipVideoVO, username);
     }
 
+    /**
+     * 查询管道视频详细信息
+     *
+     * @param id 管道视频主键
+     * @return 管道视频详细信息
+     */
     @Override
     public PipVideoVO selectPipeVideoVOById(Long id) {
         return pdiMapper.selectPipeVideoVOById(id);
     }
+
+    /**
+     * 处理用户上传请求，返回OSS上传签名信息
+     *
+     * @param pipVideoVO 管道视频信息
+     * @return OSS上传签名信息
+     */
 
     @Override
     public Map<String, String> handleUserUpload(PipVideoVO pipVideoVO) throws Exception {
@@ -53,6 +73,14 @@ public class PdiServiceImpl implements IPdiService {
 //        返回签名信息
         return ossService.getPostSignatureForOssUpload(pipeVideo.getId());
     }
+
+    /**
+     * 处理上传回调
+     *
+     * @param pipVideoId  管道视频ID
+     * @param pipVideoUrl 视频URL
+     * @return void
+     */
 
     @Override
     public void handleUploadCallback(Long pipVideoId, String pipVideoUrl) {
@@ -74,8 +102,7 @@ public class PdiServiceImpl implements IPdiService {
      * @return 结果
      */
     @Override
-    public int deletePipeVideoByIds(Long[] ids)
-    {
+    public int deletePipeVideoByIds(Long[] ids) {
         return pdiMapper.deletePipeVideoByIds(ids);
     }
 
@@ -86,8 +113,7 @@ public class PdiServiceImpl implements IPdiService {
      * @return 结果
      */
     @Override
-    public int deletePipeVideoById(Long id)
-    {
+    public int deletePipeVideoById(Long id) {
         return pdiMapper.deletePipeVideoById(id);
     }
 }
