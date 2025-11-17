@@ -115,6 +115,16 @@ public class PdiController extends BaseController {
     }
 
     /**
+     * 重新上传视频
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping("/reupload/{id}")
+    public AjaxResult reupload(@PathVariable("id") Long videoId) throws Exception {
+        Map<String, String> postSignatureForOssUpload = ossService.getPostSignatureForOssUpload(videoId);
+        return success(postSignatureForOssUpload);
+    }
+
+    /**
      * 管道视频上传失败
      */
     @PreAuthorize("@ss.hasRole('user')")
@@ -134,9 +144,9 @@ public class PdiController extends BaseController {
      * 确认管道信息
      */
     @PreAuthorize("@ss.hasRole('user')")
-    @PostMapping("/confirm_pipe_info")
-    public AjaxResult confirmPipeInfo(@RequestParam("videoId") Long videoId,
-                                      @RequestParam("pipInfo") String pipInfo) {
+    @PostMapping("/confirm_pipe_info/{id}")
+    public AjaxResult confirmPipeInfo(@PathVariable("id") Long videoId,
+                                      @RequestBody String pipInfo) {
         PipeVideo pipeVideo = new PipeVideo();
         pipeVideo.setId(videoId);
         pipeVideo.setPipeInfo(pipInfo);
