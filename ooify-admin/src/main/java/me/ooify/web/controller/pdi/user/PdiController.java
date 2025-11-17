@@ -17,6 +17,7 @@ import me.ooify.pdi.service.IPipeVideoService;
 import me.ooify.pdi.service.tool.MessagingService;
 import me.ooify.pdi.service.tool.OCRService;
 import me.ooify.pdi.service.tool.OSSService;
+import me.ooify.pdi.service.tool.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -49,6 +50,8 @@ public class PdiController extends BaseController {
     @Autowired
     private MessagingService messagingService;
 
+    @Autowired
+    private WebSocketServer webSocketServer;
     @Autowired
     private OSSService ossService;
 
@@ -96,9 +99,10 @@ public class PdiController extends BaseController {
     @Anonymous
     @PostMapping("/upload_callback")
     public AjaxResult uploadCallback(@RequestParam("fileId") Long videoId,
-                                     @RequestParam("url") String videoUrl) {
+                                     @RequestParam("url") String videoUrl,
+                                     @RequestParam("userId") Long userId) {
 //        System.out.println("上传回调: videoId=" + videoId + ", videoUrl=" + videoUrl);
-        pdiService.handleUploadCallback(videoId, videoUrl);
+        pdiService.handleUploadCallback(videoId, videoUrl, userId);
         return success();
     }
 

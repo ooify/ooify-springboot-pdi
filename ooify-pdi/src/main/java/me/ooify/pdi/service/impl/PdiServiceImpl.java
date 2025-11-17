@@ -83,7 +83,7 @@ public class PdiServiceImpl implements IPdiService {
      */
 
     @Override
-    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl) {
+    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl,Long userId) {
         PipeVideo pipeVideo = new PipeVideo();
         pipeVideo.setId(pipVideoId);
         pipeVideo.setVideoUrl(pipVideoUrl);
@@ -92,7 +92,7 @@ public class PdiServiceImpl implements IPdiService {
         pipeVideo.setUploadStatus(3L);
         pipeVideoService.updatePipeVideo(pipeVideo);
         // 发送 OCR 消息
-        messagingService.sendOCRMessage(pipeVideo.getId(), pipeVideo.getThumbnailUrl());
+        messagingService.sendOCRMessage(pipeVideo.getId(), pipeVideo.getThumbnailUrl(),userId);
     }
 
     /**

@@ -34,7 +34,7 @@ public interface IPdiService {
 
     public Map<String, String> handleUserUpload(PipVideoVO pipVideoVO) throws Exception;
 
-    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl);
+    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl,Long userId);
 
     public int deletePipeVideoByIds(Long[] ids);
 

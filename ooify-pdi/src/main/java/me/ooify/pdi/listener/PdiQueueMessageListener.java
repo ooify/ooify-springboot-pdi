@@ -2,17 +2,15 @@ package me.ooify.pdi.listener;
 
 import com.alibaba.fastjson2.JSONObject;
 
-import java.util.HashMap;
-
 import me.ooify.pdi.config.RabbitMQConfig;
 import me.ooify.pdi.domain.PipeVideo;
 import me.ooify.pdi.service.IPipeVideoService;
 import me.ooify.pdi.service.tool.OCRService;
+import me.ooify.pdi.service.tool.WebSocketServer;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class PdiQueueMessageListener {
@@ -20,7 +18,8 @@ public class PdiQueueMessageListener {
     private OCRService ocrService;
     @Autowired
     private IPipeVideoService pipeVideoService;
-
+    @Autowired
+    private WebSocketServer webSocketServer;
     // OCR 消费者
     @Component
     @RabbitListener(queues = RabbitMQConfig.OCR_QUEUE)
@@ -30,6 +29,7 @@ public class PdiQueueMessageListener {
             JSONObject json = JSONObject.parseObject(message);
             Long videoId = json.getLong("videoId");
             String url = json.getString("url");
+            Long userId = json.getLong("userId");
 
             String s = ocrService.PipInfoOcr(url);
             JSONObject jsonObject = JSONObject.parseObject(s);
@@ -37,6 +37,8 @@ public class PdiQueueMessageListener {
             pipeVideo.setId((videoId));
             pipeVideo.setPipeInfo(String.valueOf(jsonObject));
             pipeVideoService.updatePipeVideo(pipeVideo);
+//            前端消息推送
+            webSocketServer.sendToUser(userId,"ocr-update:" + videoId);
         }
     }
 

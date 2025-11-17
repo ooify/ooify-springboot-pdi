@@ -151,7 +151,7 @@ public class OSSService {
         jasonCallback.put("callbackUrl", aliOSSProperties.getCallback());
 //        jasonCallback.put("callbackBody","url="+aliOSSProperties.getHost()+"/"+"${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}");
 //        fileId
-        jasonCallback.put("callbackBody","fileId="+fileId+"&url="+aliOSSProperties.getHost()+"/"+"${object}");
+        jasonCallback.put("callbackBody","fileId="+fileId+"&url="+aliOSSProperties.getHost()+"/"+"${object}"+"&userId="+ SecurityUtils.getUserId());
 //        jasonCallback.put("callbackBody", "bucket=${bucket}&object=${object}");
         jasonCallback.put("callbackBodyType", "application/x-www-form-urlencoded");
 //        jasonCallback.put("callbackBody", "{\"bucket\":${bucket},\"object\":${object}}");

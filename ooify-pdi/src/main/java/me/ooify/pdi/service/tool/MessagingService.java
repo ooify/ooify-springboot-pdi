@@ -5,11 +5,6 @@ import me.ooify.pdi.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
 
 @Service
 public class MessagingService {
@@ -23,11 +18,11 @@ public class MessagingService {
                 msg);
     }
 
-    public void sendOCRMessage(Long pipeVideoId, String url) {
+    public void sendOCRMessage(Long pipeVideoId, String url, Long userId) {
         JSONObject message = new JSONObject();
         message.put("videoId", pipeVideoId);
         message.put("url", url);
-
+        message.put("userId", userId);
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.OCR_EXCHANGE,
                 RabbitMQConfig.OCR_ROUTING_KEY,
