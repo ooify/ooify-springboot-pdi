@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.ooify.pdi.mapper.DocMapper">
+    <resultMap type="ReportTaskVO" id="ReportTaskVOResult">
+        <result property="id" column="id"/>
+        <result property="taskNo" column="task_no"/>
+        <result property="videoId" column="video_id"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="pipeInfo" column="pipe_info"/>
+        <result property="taskStatus" column="task_status"/>
+        <result property="reportUrl" column="report_url"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectReportTaskVo">
+        select id,
+               task_no,
+               video_id,
+               video_url,
+               pipe_info,
+               task_status,
+               report_url,
+               start_time,
+               end_time,
+               create_time
+        from report_task
+    </sql>
+
+
+    <select id="selectReportTaskVOListByUser"  resultMap="ReportTaskVOResult">
+        <include refid="selectReportTaskVo"/>
+        <where>
+            <if test="reportTaskVO.taskNo != null  and reportTaskVO.taskNo != ''"> and task_no like concat('%', #{reportTaskVO.taskNo}, '%')</if>
+            <if test="reportTaskVO.videoId != null "> and video_id like concat('%', #{reportTaskVO.videoId}, '%')</if>
+            <if test="reportTaskVO.taskStatus != null "> and task_status = #{reportTaskVO.taskStatus}</if>
+
+            <if test="reportTaskVO.params.beginCreateTime != null and reportTaskVO.params.beginCreateTime != ''
+            and reportTaskVO.params.endCreateTime != null and reportTaskVO.params.endCreateTime != ''">
+                and create_time between #{reportTaskVO.params.beginCreateTime} and #{reportTaskVO.params.endCreateTime}
+            </if>
+            and create_by = #{username}
+            and is_deleted = 0
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectReportTaskVOById" parameterType="Long" resultMap="ReportTaskVOResult">
+        <include refid="selectReportTaskVo"/>
+        where id = #{id}
+    </select>
+
+    <update id="deleteReportTaskById" parameterType="Long">
+        update report_task
+        set is_deleted = 1
+        where id = #{id}
+    </update>
+
+    <update id="deleteReportTaskByIds" parameterType="String">
+        update report_task
+        set is_deleted = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

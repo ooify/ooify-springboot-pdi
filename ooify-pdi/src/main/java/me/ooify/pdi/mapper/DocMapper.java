@@ -1,0 +1,52 @@
+package me.ooify.pdi.mapper;
+
+import me.ooify.pdi.domain.vo.PipVideoVO;
+import me.ooify.pdi.domain.vo.ReportTaskVO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * DocMapper接口
+ *
+ * @author ooify
+ * @date 2025-11-18
+ */
+@Mapper
+public interface DocMapper {
+
+    /**
+     * 查询用户生成文档列表
+     *
+     * @param reportTaskVO 报告任务VO
+     * @param username     用户名
+     * @return 报告任务集合
+     */
+    public List<ReportTaskVO> selectReportTaskVOListByUser(@Param("reportTaskVO") ReportTaskVO reportTaskVO, @Param("username") String username);
+
+    /**
+     * 根据ID查询报告任务VO
+     *
+     * @param id 报告任务主键
+     * @return 报告任务VO
+     */
+    public ReportTaskVO selectReportTaskVOById(Long id);
+
+    /**
+     * 删除报告任务，源文件不删除
+     *
+     * @param id 报告任务主键
+     * @return 结果
+     */
+    public int deleteReportTaskById(Long id);
+
+    /**
+     * 批量删除报告任务，源文件不删除
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteReportTaskByIds(Long[] ids);
+
+}

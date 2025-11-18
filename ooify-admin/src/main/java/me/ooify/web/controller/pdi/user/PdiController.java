@@ -1,36 +1,22 @@
 package me.ooify.web.controller.pdi.user;
 
-import com.alibaba.fastjson2.JSONObject;
-import jakarta.servlet.http.HttpServletRequest;
 import me.ooify.common.annotation.Anonymous;
 import me.ooify.common.core.controller.BaseController;
 import me.ooify.common.core.domain.AjaxResult;
-import me.ooify.common.core.domain.model.LoginUser;
 import me.ooify.common.core.page.TableDataInfo;
 import me.ooify.common.utils.SecurityUtils;
-import me.ooify.common.utils.StringUtils;
-import me.ooify.framework.web.service.TokenService;
 import me.ooify.pdi.domain.PipeVideo;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.service.IPdiService;
 import me.ooify.pdi.service.IPipeVideoService;
-import me.ooify.pdi.service.tool.MessagingService;
-import me.ooify.pdi.service.tool.OCRService;
 import me.ooify.pdi.service.tool.OSSService;
-import me.ooify.pdi.service.tool.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 用户管道识别Controller
@@ -46,12 +32,6 @@ public class PdiController extends BaseController {
 
     @Autowired
     private IPdiService pdiService;
-
-    @Autowired
-    private MessagingService messagingService;
-
-    @Autowired
-    private WebSocketServer webSocketServer;
 
     @Autowired
     private OSSService ossService;
@@ -75,10 +55,10 @@ public class PdiController extends BaseController {
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         PipeVideo pipeVideo = pipeVideoService.selectPipeVideoById(id);
-        PipVideoVO pipVideoVO = pdiService.selectPipeVideoVOById(id);
         if (!SecurityUtils.getUsername().equals(pipeVideo.getCreateBy())) {
             return AjaxResult.error("没有权限访问该视频");
         }
+        PipVideoVO pipVideoVO = pdiService.selectPipeVideoVOById(id);
         return success(pipVideoVO);
     }
 
