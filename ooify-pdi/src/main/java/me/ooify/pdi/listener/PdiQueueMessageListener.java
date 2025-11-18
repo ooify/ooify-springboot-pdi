@@ -36,6 +36,7 @@ public class PdiQueueMessageListener {
             PipeVideo pipeVideo = new PipeVideo();
             pipeVideo.setId((videoId));
             pipeVideo.setPipeInfo(String.valueOf(jsonObject));
+            pipeVideo.setUploadStatus(3L);
             pipeVideoService.updatePipeVideo(pipeVideo);
 //            前端消息推送
             webSocketServer.sendToUser(userId,"ocr-update:" + videoId);

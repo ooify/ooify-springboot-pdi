@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 用户上传视频Controller
+ * 用户管道识别Controller
  *
  * @author ooify
  * @date 2025-11-03
@@ -52,6 +52,7 @@ public class PdiController extends BaseController {
 
     @Autowired
     private WebSocketServer webSocketServer;
+
     @Autowired
     private OSSService ossService;
 

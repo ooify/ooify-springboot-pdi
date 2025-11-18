@@ -89,7 +89,7 @@ public class PdiServiceImpl implements IPdiService {
         pipeVideo.setVideoUrl(pipVideoUrl);
         pipeVideo.setThumbnailUrl(pipVideoUrl + "?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast,ar_auto");
         // 信息待确定
-        pipeVideo.setUploadStatus(3L);
+        pipeVideo.setUploadStatus(4L);
         pipeVideoService.updatePipeVideo(pipeVideo);
         // 发送 OCR 消息
         messagingService.sendOCRMessage(pipeVideo.getId(), pipeVideo.getThumbnailUrl(),userId);
