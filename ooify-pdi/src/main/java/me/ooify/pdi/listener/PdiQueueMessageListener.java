@@ -1,5 +1,6 @@
 package me.ooify.pdi.listener;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 
 import me.ooify.pdi.config.RabbitMQConfig;
@@ -11,6 +12,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class PdiQueueMessageListener {
@@ -39,7 +43,10 @@ public class PdiQueueMessageListener {
             pipeVideo.setUploadStatus(3L);
             pipeVideoService.updatePipeVideo(pipeVideo);
 //            前端消息推送
-            webSocketServer.sendToUser(userId,"ocr-update:" + videoId);
+            Map<String, Object> msg = new HashMap<>();
+            msg.put("type", "video-upload");
+            msg.put("videoId", videoId);
+            webSocketServer.sendToUser(userId,JSON.toJSONString(msg));
         }
     }
 

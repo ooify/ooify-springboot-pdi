@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@ServerEndpoint("/ws/pdi/{userId}")
+@ServerEndpoint("/ws/{userId}")
 public class WebSocketServer {
 
     private static final ConcurrentHashMap<Long, Session> SESSION_MAP = new ConcurrentHashMap<>();
