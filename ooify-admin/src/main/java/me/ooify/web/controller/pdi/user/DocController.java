@@ -9,6 +9,7 @@ import me.ooify.pdi.domain.ReportTask;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.domain.vo.ReportTaskVO;
 import me.ooify.pdi.service.IDocService;
+import me.ooify.pdi.service.IPipeVideoService;
 import me.ooify.pdi.service.IReportTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +33,9 @@ public class DocController extends BaseController {
 
     @Autowired
     private IReportTaskService reportTaskService;
+
+    @Autowired
+    private IPipeVideoService pipeVideoService;
 
     /**
      * 查询用户报告列表
@@ -60,6 +64,17 @@ public class DocController extends BaseController {
     }
 
     /**
+     * 生成视频报告
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @PostMapping("/generate/{ids}")
+    public AjaxResult generateReport(@PathVariable Long[] ids) {
+        docService.generateReportByIds(ids);
+        return AjaxResult.success("报告生成任务已提交");
+
+    }
+
+    /**
      * 删除用户报告
      */
     @PreAuthorize("@ss.hasRole('user')")
@@ -67,7 +82,6 @@ public class DocController extends BaseController {
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(docService.deleteReportTaskByIds(ids));
     }
-
 
 
 }

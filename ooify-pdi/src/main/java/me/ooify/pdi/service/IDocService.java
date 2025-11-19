@@ -45,4 +45,13 @@ public interface IDocService {
      * @return 结果
      */
     public int deleteReportTaskById(Long id);
+
+
+    /**
+     * 生成报告任务
+     *
+     * @param ids 管道视频主键数组
+     */
+    public void generateReportByIds(Long[] ids);
+
 }
