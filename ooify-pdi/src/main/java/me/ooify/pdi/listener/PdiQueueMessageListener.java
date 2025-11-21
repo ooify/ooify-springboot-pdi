@@ -81,7 +81,7 @@ public class PdiQueueMessageListener {
             msg.put("taskId", taskId);
             webSocketServer.sendToUser(userId, JSON.toJSONString(msg));
 
-            Thread.sleep(2 * 60 * 1000);
+            Thread.sleep(10 * 1000);
 
 
 //            上传到oss
@@ -92,7 +92,7 @@ public class PdiQueueMessageListener {
             finish.setId(taskId);
             finish.setTaskStatus(2L);
             finish.setEndTime(new java.util.Date());
-            finish.setReportUrl("");
+            finish.setReportUrl("https://tust-pdi.oss-cn-beijing.aliyuncs.com/doc/test.docx");
             reportTaskService.updateReportTask(finish);
             webSocketServer.sendToUser(userId, JSON.toJSONString(msg));
 
