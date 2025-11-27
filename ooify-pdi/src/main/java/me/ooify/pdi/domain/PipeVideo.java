@@ -27,6 +27,10 @@ public class PipeVideo extends BaseEntity
     @Excel(name = "视频")
     private String videoUrl;
 
+    /** 道路ID */
+    @Excel(name = "道路ID")
+    private Long roadId;
+
     /** 缩略图 */
     @Excel(name = "缩略图")
     private String thumbnailUrl;
@@ -180,6 +184,14 @@ public class PipeVideo extends BaseEntity
     public Long getIsDeleted() 
     {
         return isDeleted;
+    }
+
+    public Long getRoadId() {
+        return roadId;
+    }
+
+    public void setRoadId(Long roadId) {
+        this.roadId = roadId;
     }
 
     @Override

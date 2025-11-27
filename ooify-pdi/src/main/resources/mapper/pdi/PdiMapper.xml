@@ -7,6 +7,7 @@
     <resultMap type="PipVideoVO" id="PipeVideoVOResult">
         <result property="id" column="id"/>
         <result property="videoName" column="video_name"/>
+        <result property="roadId" column="road_id"/>
         <result property="videoUrl" column="video_url"/>
         <result property="thumbnailUrl" column="thumbnail_url"/>
         <result property="fileSize" column="file_size"/>
@@ -21,6 +22,7 @@
     <sql id="selectPipeVideoVo">
         select id,
                video_name,
+               road_id,
                video_url,
                thumbnail_url,
                file_size,
@@ -38,6 +40,9 @@
         <where>
             <if test="pipVideoVO.videoName != null and pipVideoVO.videoName != ''">
                 and video_name like concat('%', #{pipVideoVO.videoName}, '%')
+            </if>
+            <if test="pipVideoVO.roadId != null">
+                and road_id = #{pipVideoVO.roadId}
             </if>
             <if test="pipVideoVO.mimeType != null and pipVideoVO.mimeType != ''">
                 and mime_type = #{pipVideoVO.mimeType}
@@ -57,6 +62,12 @@
     <select id="selectPipeVideoVOById" parameterType="Long" resultType="me.ooify.pdi.domain.vo.PipVideoVO">
         <include refid="selectPipeVideoVo"/>
         where id = #{id}
+    </select>
+    <select id="selectPipeVideoVOByRoadId" resultType="me.ooify.pdi.domain.vo.PipVideoVO">
+        <include refid="selectPipeVideoVo"/>
+        where road_id = #{roadId}
+        and is_deleted = 0
+        order by create_time desc
     </select>
 
     <update id="deletePipeVideoById" parameterType="Long">

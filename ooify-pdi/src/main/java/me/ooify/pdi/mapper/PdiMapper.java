@@ -45,4 +45,12 @@ public interface PdiMapper {
      * @return 结果
      */
     public int deletePipeVideoByIds(Long[] ids);
+
+    /**
+     * 根据道路ID查询管道视频VO列表
+     *
+     * @param roadId 道路ID
+     * @return 管道视频VO列表
+     */
+    List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId);
 }

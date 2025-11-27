@@ -74,6 +74,7 @@ public class PdiQueueMessageListener {
             reportTask.setId(taskId);
             reportTask.setTaskStatus(1L);
             reportTask.setStartTime(new java.util.Date());
+            reportTask.setReportUrl("https://tust-pdi.oss-cn-beijing.aliyuncs.com/doc/test.docx");
             reportTaskService.updateReportTask(reportTask);
             // 前端消息推送
             Map<String, Object> msg = new HashMap<>();
@@ -81,7 +82,7 @@ public class PdiQueueMessageListener {
             msg.put("taskId", taskId);
             webSocketServer.sendToUser(userId, JSON.toJSONString(msg));
 
-            Thread.sleep(2 * 60 * 1000);
+            Thread.sleep(10 * 1000);
 
 
 //            上传到oss

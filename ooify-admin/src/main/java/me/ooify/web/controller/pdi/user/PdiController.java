@@ -47,6 +47,15 @@ public class PdiController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 根据道路ID查询用户视频列表
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @GetMapping("/list/{roadId}")
+    public AjaxResult listByRoadId(@PathVariable("roadId") Long roadId) {
+        List<PipVideoVO> pipVideoVOList = pdiService.selectPipeVideoVOByRoadId(roadId);
+        return success(pipVideoVOList);
+    }
 
     /**
      * 获取用户管道视频详细信息

@@ -29,6 +29,11 @@ public class PipVideoVO {
     private String videoUrl;
 
     /**
+     * 道路ID
+     */
+    private Long roadId;
+
+    /**
      * 缩略图
      */
     private String thumbnailUrl;

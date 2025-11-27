@@ -116,4 +116,9 @@ public class PdiServiceImpl implements IPdiService {
     public int deletePipeVideoById(Long id) {
         return pdiMapper.deletePipeVideoById(id);
     }
+
+    @Override
+    public List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId) {
+        return pdiMapper.selectPipeVideoVOByRoadId(roadId);
+    }
 }

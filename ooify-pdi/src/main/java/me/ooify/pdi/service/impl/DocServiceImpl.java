@@ -59,6 +59,7 @@ public class DocServiceImpl implements IDocService {
             reportTask.setVideoId(pipeVideo.getId());
             reportTask.setVideoUrl(pipeVideo.getVideoUrl());
             reportTask.setPipeInfo(pipeVideo.getPipeInfo());
+            
 //            排队中
             reportTask.setTaskStatus(0L);
             reportTask.setCreateBy(SecurityUtils.getUsername());

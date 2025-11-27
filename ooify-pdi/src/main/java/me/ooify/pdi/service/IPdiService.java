@@ -39,4 +39,6 @@ public interface IPdiService {
     public int deletePipeVideoByIds(Long[] ids);
 
     public int deletePipeVideoById(Long id);
+
+    public List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId);
 }
