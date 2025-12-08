@@ -2,6 +2,7 @@ package me.ooify.pdi.service.impl;
 
 import me.ooify.common.utils.SecurityUtils;
 import me.ooify.pdi.domain.PipeVideo;
+import me.ooify.pdi.domain.vo.PipVideoTableVO;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.mapper.PdiMapper;
 import me.ooify.pdi.service.IPdiService;
@@ -83,7 +84,7 @@ public class PdiServiceImpl implements IPdiService {
      */
 
     @Override
-    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl,Long userId) {
+    public void handleUploadCallback(Long pipVideoId, String pipVideoUrl, Long userId) {
         PipeVideo pipeVideo = new PipeVideo();
         pipeVideo.setId(pipVideoId);
         pipeVideo.setVideoUrl(pipVideoUrl);
@@ -92,7 +93,7 @@ public class PdiServiceImpl implements IPdiService {
         pipeVideo.setUploadStatus(4L);
         pipeVideoService.updatePipeVideo(pipeVideo);
         // 发送 OCR 消息
-        messagingService.sendOCRMessage(pipeVideo.getId(), pipeVideo.getThumbnailUrl(),userId);
+        messagingService.sendOCRMessage(pipeVideo.getId(), pipeVideo.getVideoUrl(), userId);
     }
 
     /**
@@ -120,5 +121,10 @@ public class PdiServiceImpl implements IPdiService {
     @Override
     public List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId) {
         return pdiMapper.selectPipeVideoVOByRoadId(roadId);
+    }
+
+    @Override
+    public List<PipVideoTableVO> selectPipVideoTableList(PipVideoTableVO pipVideoTableVO) {
+        return pdiMapper.selectPipVideoTableList(pipVideoTableVO);
     }
 }

@@ -6,6 +6,7 @@ import me.ooify.common.core.controller.BaseController;
 import me.ooify.common.core.domain.AjaxResult;
 import me.ooify.common.core.page.TableDataInfo;
 import me.ooify.common.enums.BusinessType;
+import me.ooify.common.utils.SecurityUtils;
 import me.ooify.common.utils.poi.ExcelUtil;
 import me.ooify.pdi.domain.Road;
 import me.ooify.pdi.service.IRoadService;
@@ -41,6 +42,18 @@ public class RoadInfoController extends BaseController
     }
 
     /**
+     * 查询当前用户的所有道路基础信息
+     */
+    @PreAuthorize("@ss.hasRole('user')")
+    @GetMapping("/all")
+    public AjaxResult allList(Road road)
+    {
+        road.setCreateBy(SecurityUtils.getUsername());
+        List<Road> list = roadService.selectRoadList(road);
+        return success(list);
+    }
+
+    /**
      * 导出道路基础信息列表
      */
     @PreAuthorize("@ss.hasRole('user')")
@@ -71,7 +84,12 @@ public class RoadInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Road road)
     {
-        return toAjax(roadService.insertRoad(road));
+        List<Road> roads = roadService.selectRoadList(road);
+        if (!roads.isEmpty()) {
+            return AjaxResult.error("道路名称已存在！");
+        }
+        roadService.insertRoad(road);
+        return success(road.getId());
     }
 
     /**

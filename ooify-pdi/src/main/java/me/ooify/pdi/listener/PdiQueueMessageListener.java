@@ -46,8 +46,12 @@ public class PdiQueueMessageListener {
             String url = json.getString("url");
             Long userId = json.getLong("userId");
 
-            String s = ocrService.PipInfoOcr(url);
+            String s = ocrService.PipInfoOcr(url+"?x-oss-process=video/snapshot,t_0,f_jpg,w_0,h_0,m_fast,ar_auto");
             JSONObject jsonObject = JSONObject.parseObject(s);
+            String s1 = ocrService.PipDistanceOcr(url+"?x-oss-process=video/snapshot,t_1000000000000,f_jpg,w_0,h_0,m_fast,ar_auto");
+            System.out.println("距离信息："+s1);
+            JSONObject distanceJson = JSONObject.parseObject(s1);
+            jsonObject.put("pipe_length", distanceJson.getString("pipe_length"));
             PipeVideo pipeVideo = new PipeVideo();
             pipeVideo.setId((videoId));
             pipeVideo.setPipeInfo(String.valueOf(jsonObject));

@@ -84,4 +84,99 @@
             #{id}
         </foreach>
     </update>
+
+
+    <resultMap id="PipVideoTableVOResult" type="me.ooify.pdi.domain.vo.PipVideoTableVO">
+        <result property="id" column="id"/>
+        <result property="videoName" column="video_name"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="roadId" column="road_id"/>
+        <result property="pipeInfo" column="pipe_info"/>
+        <result property="uploadStatus" column="upload_status"/>
+        <result property="taskStatus" column="task_status"/>
+        <result property="reportUrl" column="report_url"/>
+        <result property="defectCount" column="defect_count"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectPipVideoTable">
+        SELECT
+            pv.id,
+            pv.video_name,
+            pv.video_url,
+            pv.thumbnail_url,
+            pv.road_id,
+            ANY_VALUE(pv.pipe_info) AS pipe_info,
+            pv.upload_status,
+
+            ANY_VALUE(rt.task_status) AS task_status,
+            ANY_VALUE(rt.report_url) AS report_url,
+
+            ANY_VALUE(pv.create_time) AS create_time,
+
+            COUNT(pd.id) AS defect_count
+
+        FROM pipe_video pv
+                 LEFT JOIN report_task rt ON pv.id = rt.video_id
+                 LEFT JOIN pipe_defect pd ON pv.id = pd.pipe_video_id
+    </sql>
+    <select id="selectPipVideoTableList"
+            parameterType="me.ooify.pdi.domain.vo.PipVideoTableVO"
+            resultMap="PipVideoTableVOResult">
+
+        <include refid="selectPipVideoTable"/>
+
+        <where>
+            <if test="id != null"> AND pv.id = #{id} </if>
+
+            <if test="videoName != null and videoName != ''">
+                AND pv.video_name LIKE concat('%', #{videoName}, '%')
+            </if>
+
+            <if test="roadId != null"> AND pv.road_id = #{roadId} </if>
+
+            <if test="uploadStatus != null">
+                AND pv.upload_status = #{uploadStatus}
+            </if>
+
+            <if test="taskStatus != null">
+                AND rt.task_status = #{taskStatus}
+            </if>
+
+            <if test="createBy != null and createBy != ''">
+                AND pv.create_by = #{createBy}
+            </if>
+
+            <!-- 创建时间筛选 -->
+            <if test="params.beginCreateTime != null and params.beginCreateTime != ''">
+                AND pv.create_time &gt;= #{params.beginCreateTime}
+            </if>
+            <if test="params.endCreateTime != null and params.endCreateTime != ''">
+                AND pv.create_time &lt;= #{params.endCreateTime}
+            </if>
+        </where>
+
+        GROUP BY pv.id
+
+        <!-- 排序规则 -->
+        <choose>
+            <when test="params.orderBy != null and params.orderBy != ''">
+
+                <!-- 根据字段动态排序 -->
+                ORDER BY
+                ${params.orderBy}
+                <if test="params.orderType != null and params.orderType != ''">
+                    ${params.orderType}
+                </if>
+
+            </when>
+
+            <!-- 默认排序 -->
+            <otherwise>
+                ORDER BY pv.create_time DESC
+            </otherwise>
+        </choose>
+
+    </select>
 </mapper>

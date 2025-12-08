@@ -1,6 +1,7 @@
 package me.ooify.pdi.service;
 
 import me.ooify.pdi.domain.PipeVideo;
+import me.ooify.pdi.domain.vo.PipVideoTableVO;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,4 +42,6 @@ public interface IPdiService {
     public int deletePipeVideoById(Long id);
 
     public List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId);
+
+    public List<PipVideoTableVO> selectPipVideoTableList(PipVideoTableVO pipVideoTableVO);
 }

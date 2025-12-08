@@ -1,5 +1,6 @@
 package me.ooify.pdi.mapper;
 
+import me.ooify.pdi.domain.vo.PipVideoTableVO;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -53,4 +54,7 @@ public interface PdiMapper {
      * @return 管道视频VO列表
      */
     List<PipVideoVO> selectPipeVideoVOByRoadId(Long roadId);
+
+    public List<PipVideoTableVO> selectPipVideoTableList(PipVideoTableVO pipVideoTableVO);
+
 }

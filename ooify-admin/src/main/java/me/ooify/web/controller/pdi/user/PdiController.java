@@ -6,6 +6,7 @@ import me.ooify.common.core.domain.AjaxResult;
 import me.ooify.common.core.page.TableDataInfo;
 import me.ooify.common.utils.SecurityUtils;
 import me.ooify.pdi.domain.PipeVideo;
+import me.ooify.pdi.domain.vo.PipVideoTableVO;
 import me.ooify.pdi.domain.vo.PipVideoVO;
 import me.ooify.pdi.service.IPdiService;
 import me.ooify.pdi.service.IPipeVideoService;
@@ -55,6 +56,15 @@ public class PdiController extends BaseController {
     public AjaxResult listByRoadId(@PathVariable("roadId") Long roadId) {
         List<PipVideoVO> pipVideoVOList = pdiService.selectPipeVideoVOByRoadId(roadId);
         return success(pipVideoVOList);
+    }
+
+
+    @PostMapping("/list/table")
+    public TableDataInfo listTable(@RequestBody PipVideoTableVO pipVideoTableVO) {
+        startPage();
+        pipVideoTableVO.setCreateBy(SecurityUtils.getUsername());
+        List<PipVideoTableVO> pipVideoTableVOS = pdiService.selectPipVideoTableList(pipVideoTableVO);
+        return getDataTable(pipVideoTableVOS);
     }
 
     /**
